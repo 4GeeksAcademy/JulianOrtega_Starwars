@@ -6,7 +6,7 @@ import {
     Route,
 } from "react-router-dom";
 import { Layout } from "./pages/Layout";
-import { All } from "./pages/All";
+import { All } from "./components/All";
 // import { Single } from "./pages/Single";
 import { Characters } from "./pages/Characters";
 import { Demo } from "./pages/Demo";

@@ -18,7 +18,6 @@ export default function storeReducer(store, action = {}) {
       };
 
     case 'characters':
-      console.log(action.payload);
       
       return {...store, characters: action.payload};
 
