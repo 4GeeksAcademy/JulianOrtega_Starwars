@@ -1,6 +1,29 @@
 import React from "react";
+import useGlobalReducer from "../hooks/useGlobalReducer";
+import { useEffect } from "react";
 
-export const All = ({ name, imageUrl }) => {
+export const Characters = ({ name, imageUrl }) => {
+
+  const API_URL = import.meta.env.VITE_API_URL;
+  const { store, dispatch } = useGlobalReducer();
+
+  useEffect(() => {
+    const fetchcharacters = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}people?page=1&limit=20`,
+          { headers: { 'Accept': 'application/json' } }
+        );
+        const data = await response.json();
+        dispatch({ type: 'characters', payload: data });
+      } catch (error) {
+        console.error("Error fetching agendas:", error);
+        dispatch({ type: 'set_message', payload: "Error cargando agendas" });
+      }
+    };
+    fetchcharacters();
+  }, [dispatch]);
+
   return (
     <div className="card bg-dark text-white" style={{ 
       maxWidth: "200px", 
