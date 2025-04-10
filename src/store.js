@@ -18,8 +18,10 @@ export default function storeReducer(store, action = {}) {
       };
 
     case 'characters':
-      
-      return {...store, characters: action.payload};
+      return {
+        ...store,
+        characters: action.payload
+      };
 
     default:
       return store;
