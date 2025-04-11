@@ -1,5 +1,3 @@
-// Import necessary components and functions from react-router-dom.
-
 import {
     createBrowserRouter,
     createRoutesFromElements,
@@ -9,6 +7,7 @@ import { Layout } from "./pages/Layout";
 import { All } from "./components/All";
 // import { Single } from "./pages/Single";
 import { Characters } from "./pages/Characters";
+import { Character } from "./components/Character";
 import { Demo } from "./pages/Demo";
 
 export const router = createBrowserRouter(
@@ -24,7 +23,10 @@ export const router = createBrowserRouter(
 
         {/* Nested Routes: Defines sub-routes within the BaseHome component. */}
         <Route path= "/" element={<All />} />
-        <Route path="/characters" element={ <Characters />} />  {/* Dynamic route for single items */}
+        <Route path="characters">
+          <Route index element={<Characters />} /> {/* /characters */}
+          <Route path=":id" element={<Character />} /> {/* /characters/5 */}
+        </Route>
         <Route path="/demo" element={<Demo />} />
       </Route>
     )

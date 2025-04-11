@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import React, { useState } from "react";
 
 export const Sidebar = () => {
@@ -25,8 +26,8 @@ export const Sidebar = () => {
             onMouseEnter={() => setHoveredItem(index)}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <a 
-              href="#" 
+            <Link 
+              to={`${item.toLowerCase()}`}
               className={`${
                 item === "Browse" 
                   ? "nav-link text-uppercase text-secondary" 
@@ -36,7 +37,7 @@ export const Sidebar = () => {
               }`}
             >
               {item}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

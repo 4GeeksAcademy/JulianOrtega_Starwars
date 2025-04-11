@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useState, useEffect, useRef, useCallback } from "react";
 
@@ -11,6 +12,10 @@ export const Characters = () => {
   const [isLoading, setIsLoading] = useState(false);
   
   const observer = useRef();
+
+
+  // console.log(id);
+  
 
   const lastItemRef = useCallback(node => {
     if (isLoading) return;
@@ -101,9 +106,9 @@ export const Characters = () => {
                 <h5 className="card-title mb-1 text-uppercase" style={{ fontSize: "0.9rem" }}>
                   {character.name}
                 </h5>
-                <a href="#" className="text-decoration-none text-danger small">
+                <Link to={`/${character.uid}`} className="text-decoration-none text-danger small">
                   Databank
-                </a>
+                </Link>
               </div>
             </div>
           )
@@ -150,9 +155,9 @@ export const Characters = () => {
               <h5 className="card-title mb-1 text-uppercase" style={{ fontSize: "0.9rem" }}>
                 {character.name}
               </h5>
-              <a href="#" className="text-decoration-none text-danger small">
+              <Link to={`/characters/${character.uid}`} className="text-decoration-none text-danger small">
                 Databank
-              </a>
+              </Link>
             </div>
           </div>
         )
