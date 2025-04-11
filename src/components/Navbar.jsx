@@ -7,27 +7,42 @@ export const Navbar = () => {
   const { store } = useGlobalReducer();
   const [likedUids, setLikedUids] = useState([]);
   
-  // Obtener los personajes favoritos
+  // Cargar favoritos y configurar listeners
+  useEffect(() => {
+    // Función para actualizar el estado desde localStorage
+    const loadLikedUids = () => {
+      const saved = localStorage.getItem('likedCharacters');
+      if (saved) setLikedUids(JSON.parse(saved));
+    };
+    
+    // Cargar datos iniciales
+    loadLikedUids();
+
+    // Handler para cambios en el storage
+    const handleStorageChange = (e) => {
+      if (e.key === 'likedCharacters') {
+        loadLikedUids();
+      }
+    };
+
+    // Escuchar eventos de storage (cambios desde otras pestañas)
+    window.addEventListener('storage', handleStorageChange);
+
+    // Escuchar cambios locales cada segundo (solo para desarrollo)
+    const interval = setInterval(loadLikedUids, 1000);
+
+    // Limpieza
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+
+  // Obtener personajes favoritos actualizados
   const likedCharacters = store.characters.filter(character => 
     likedUids.includes(character.uid)
   );
 
-  // Recargar favoritos
-  useEffect(() => {
-    likedCharacters = store.characters.filter(character => 
-      likedUids.includes(character.uid)
-    );
-  }, [localStorage.getItem('likedCharacters')]);
-
-  // Cargar favoritos desde localStorage
-  useEffect(() => {
-    const savedLikes = localStorage.getItem('likedCharacters');
-    if (savedLikes) {
-      setLikedUids(JSON.parse(savedLikes));
-    }
-  }, []);
-
-  // Eliminar favorito
   const handleDelete = (uid) => {
     const newLiked = likedUids.filter(id => id !== uid);
     setLikedUids(newLiked);
