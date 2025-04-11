@@ -13,10 +13,6 @@ export const Characters = () => {
   
   const observer = useRef();
 
-
-  // console.log(id);
-  
-
   const lastItemRef = useCallback(node => {
     if (isLoading) return;
     if (observer.current) observer.current.disconnect();
