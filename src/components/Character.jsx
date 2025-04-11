@@ -42,7 +42,7 @@ export const Character = () => {
       <img 
         src={"https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"} 
         alt={character.name}
-        className="img-fluid"
+        className="img-fluid "
         style={{ 
           width: "40%", 
           borderRight: "4px solid rgb(158, 79, 96)",
@@ -52,8 +52,9 @@ export const Character = () => {
         }} 
       />
       <div 
-        className="p-4" 
+        className="p-4 w-full" 
         style={{ 
+          width: "60%", 
           backgroundColor: "#1f1f1f",
           backgroundImage: `
             repeating-linear-gradient(
