@@ -27,7 +27,7 @@ export const router = createBrowserRouter(
           <Route index element={<Characters />} />
           <Route path=":id" element={<Character />} />
         </Route>
-        <Route path="/creatures" element={<Creatures />} />
+        <Route path="creatures" element={<Creatures />} />
       </Route>
     )
 );

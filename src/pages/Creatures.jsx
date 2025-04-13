@@ -15,12 +15,12 @@ export const Creatures = () => {
   const [isClicked, setIsClicked] = useState(false);
   const observer = useRef();
 
-  // useEffect(() => {
-  //   const savedLikes = localStorage.getItem('likedCharacters');
-  //   if (savedLikes) {
-  //     setLikedUids(JSON.parse(savedLikes));
-  //   }
-  // }, []);
+  useEffect(() => {
+    const savedLikes = localStorage.getItem('likedCharacters');
+    if (savedLikes) {
+      setLikedUids(JSON.parse(savedLikes));
+    }
+  }, []);
 
   const handleLike = useCallback((uid) => {
     setLikedUids(prev => {
@@ -47,10 +47,10 @@ export const Creatures = () => {
     if (node) observer.current.observe(node);
   }, [isLoading, hasMore]);
 
-  const fetchCharacters = async (page) => {
+  const fetchCreatures = async (page) => {
     try {
       setIsLoading(true);
-      const response = await fetch(`${API_URL}people?page=${page}&limit=20`, {
+      const response = await fetch(`${API_URL}vehicles?page=${page}&limit=20`, {
         headers: { 'Accept': 'application/json' }
       });
       const data = await response.json();
@@ -70,7 +70,7 @@ export const Creatures = () => {
   };
 
   useEffect(() => {
-    fetchCharacters(currentPage);
+    fetchCreatures(currentPage);
   }, [currentPage]);
 
   return (
