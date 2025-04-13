@@ -8,7 +8,7 @@ import { All } from "./components/All";
 // import { Single } from "./pages/Single";
 import { Characters } from "./pages/Characters";
 import { Character } from "./components/Character";
-import { Creatures } from "./pages/Creatures";
+import { Vehicles } from "./pages/Vehicles";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -27,7 +27,7 @@ export const router = createBrowserRouter(
           <Route index element={<Characters />} />
           <Route path=":id" element={<Character />} />
         </Route>
-        <Route path="creatures" element={<Creatures />} />
+        <Route path="vehicles" element={<Vehicles />} />
       </Route>
     )
 );

@@ -3,7 +3,7 @@ export const initialStore=()=>{
     message: null,
     todos: [],
     characters: [],
-    creatures: []
+    vehicles: []
   }
 }
 
@@ -21,10 +21,10 @@ export default function storeReducer(store, action = {}) {
         ...store,
         characters: action.payload
       };
-    case 'creatures':
+    case 'vehicles':
       return {
         ...store,
-        creatures: action.payload
+        vehicles: action.payload
       };
 
     default:

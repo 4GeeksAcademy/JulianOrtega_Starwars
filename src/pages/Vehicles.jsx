@@ -5,7 +5,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { MdFavorite } from "react-icons/md";
 import 'animate.css';
 
-export const Creatures = () => {
+export const Vehicles = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const { store, dispatch } = useGlobalReducer();
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,7 +16,7 @@ export const Creatures = () => {
   const observer = useRef();
 
   useEffect(() => {
-    const savedLikes = localStorage.getItem('likedCharacters');
+    const savedLikes = localStorage.getItem('likedCreatures');
     if (savedLikes) {
       setLikedUids(JSON.parse(savedLikes));
     }
@@ -28,7 +28,7 @@ export const Creatures = () => {
         ? prev.filter(id => id !== uid) 
         : [...prev, uid];
       
-      localStorage.setItem('likedCharacters', JSON.stringify(newLiked));
+      localStorage.setItem('likedCreatures', JSON.stringify(newLiked));
       return newLiked;
     });
     
@@ -47,44 +47,45 @@ export const Creatures = () => {
     if (node) observer.current.observe(node);
   }, [isLoading, hasMore]);
 
-  const fetchCreatures = async (page) => {
+  const fetchVehicles = async (page) => {
     try {
       setIsLoading(true);
       const response = await fetch(`${API_URL}vehicles?page=${page}&limit=20`, {
         headers: { 'Accept': 'application/json' }
       });
       const data = await response.json();
-
+      console.log(data);
+      
       dispatch({
-        type: 'characters',
-        payload: page === 1 ? data.results : [...store.characters, ...data.results]
+        type: 'creatures',
+        payload: page === 1 ? data.results : [...store.creatures, ...data.results]
       });
 
       setHasMore(data.results.length === 20);
 
     } catch (error) {
-      console.error("Error fetching characters:", error);
+      console.error("Error fetching vehicles:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCreatures(currentPage);
+    fetchVehicles(currentPage);
   }, [currentPage]);
 
   return (
     <div className="d-flex flex-wrap gap-4 justify-content-center p-4">
-      {store.characters?.map((character, index) => {
-        const isLiked = likedUids.includes(character.uid);
-        const isLastItem = store.characters.length === index + 1;
+      {store.vehicles?.map((vehicle, index) => {
+        const isLiked = likedUids.includes(vehicle.uid);
+        const isLastItem = store.vehicles.length === index + 1;
         
         const cardContent = (
           <>
             <img
-              src={character.imageUrl || "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"}
+              src={vehicle.imageUrl || "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"}
               className="card-img-top"
-              alt={character.name}
+              alt={vehicle.name}
               style={{
                 height: "65%",
                 objectFit: "cover",
@@ -110,10 +111,10 @@ export const Creatures = () => {
               }}
             >
               <h5 className="card-title mb-1 text-uppercase" style={{ fontSize: "0.9rem" }}>
-                {character.name}
+                {vehicle.name}
               </h5>
               <div className="d-flex flex-row justify-content-between align-items-center w-100">
-                <Link to={`/characters/${character.uid}`} className="text-decoration-none text-danger small">
+                <Link to={`/vehicles/${vehicle.uid}`} className="text-decoration-none text-danger small">
                   Databank
                 </Link>
                 <div 
@@ -130,7 +131,7 @@ export const Creatures = () => {
                     height: '40px'
                   }}
                   role="button"
-                  onClick={() => handleLike(character.uid)}
+                  onClick={() => handleLike(vehicle.uid)}
                   aria-label={isLiked ? 'Quitar like' : 'Dar like'}
                   tabIndex={0}
                 >
