@@ -54,7 +54,6 @@ export const Vehicles = () => {
         headers: { 'Accept': 'application/json' }
       });
       const data = await response.json();
-      console.log(data);
       
       dispatch({
         type: 'vehicles',

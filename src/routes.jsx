@@ -8,7 +8,10 @@ import { All } from "./components/All";
 // import { Single } from "./pages/Single";
 import { Characters } from "./pages/Characters";
 import { Character } from "./components/Character";
+import { Planeta } from "./components/Planet";
+import { Vehicle } from "./components/Vehicle";
 import { Vehicles } from "./pages/Vehicles";
+import { Planetas } from "./pages/Planets";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -27,7 +30,14 @@ export const router = createBrowserRouter(
           <Route index element={<Characters />} />
           <Route path=":id" element={<Character />} />
         </Route>
-        <Route path="vehicles" element={<Vehicles />} />
+        <Route path="vehicles">
+          <Route index element={<Vehicles />} />
+          <Route path=":id" element={<Vehicle />} />
+        </Route>
+        <Route path="planets">
+          <Route index element={<Planetas />} />
+          <Route path=":id" element={<Planeta />} />
+        </Route>
       </Route>
     )
 );

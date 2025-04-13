@@ -3,38 +3,38 @@ import { useParams } from 'react-router-dom';
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useState, useEffect } from "react";
 
-export const Character = () => {
+export const Planeta = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [characterData, setCharacterData] = useState(null);
+  const [planetData, setPlanetData] = useState(null);
   
   const { id } = useParams();
   const { store } = useGlobalReducer();
 
-  const fetchCharacterData = async () => {
+  const fetchPlanetData = async () => {
     try {
       setIsLoading(true);
-      const cachedCharacter = store.characters.find(item => item.uid === id);
+      const cachedPlanet = store.planets.find(item => item.uid === id);
       
-      const response = await fetch(`${API_URL}people/${id}`, {
+      const response = await fetch(`${API_URL}planets/${id}`, {
         headers: { 'Accept': 'application/json' }
       });
       
-      if (!response.ok) throw new Error('Character not found');
+      if (!response.ok) throw new Error('Planet not found');
       
       const apiData = await response.json().then(data => data.result);
       
       const mergedData = {
-        ...cachedCharacter,
+        ...cachedPlanet,
         ...apiData,
         properties: {
-          ...cachedCharacter?.properties,
+          ...cachedPlanet?.properties,
           ...apiData.properties
         }
       };
       
-      setCharacterData(mergedData);
+      setPlanetData(mergedData);
       
     } catch (err) {
       setError(err.message);
@@ -44,13 +44,13 @@ export const Character = () => {
   };
 
   useEffect(() => {
-    fetchCharacterData();
+    fetchPlanetData();
   }, [id]);
 
   if (isLoading) {
     return (
       <div className="text-center py-5">
-        <p className="text-light mt-2">Loading character data...</p>
+        <p className="text-light mt-2">Loading planet data...</p>
       </div>
     );
   }
@@ -63,8 +63,8 @@ export const Character = () => {
     );
   }
 
-  if (!characterData) {
-    return <div className="text-light text-center mt-4">Character not found</div>;
+  if (!planetData) {
+    return <div className="text-light text-center mt-4">Planet not found</div>;
   }
 
   // Extraer datos
@@ -72,15 +72,18 @@ export const Character = () => {
     name,
     description,
     properties: {
-      height = 'N/A',
-      mass = 'N/A',
-      hair_color = 'N/A',
-      skin_color = 'N/A',
-      eye_color = 'N/A',
-      birth_year = 'N/A',
-      gender = 'N/A'
+      climate = 'N/A',
+      diameter = 'N/A',
+      gravity = 'N/A',
+      orbital_period = 'N/A',
+      population = 'N/A',
+      rotation_period = 'N/A',
+      surface_water = 'N/A',
+      terrain = 'N/A'
     } = {}
-  } = characterData;
+  } = planetData;
+  console.log(planetData);
+  
 
   return (
     <div className="card text-white bg-dark mb-4" style={{ 
@@ -92,8 +95,8 @@ export const Character = () => {
     }}>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <img 
-          src={characterData.image || "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"} 
-          alt={name}
+          src={planetData.imageUrl || "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"} 
+          alt={planetData.properties.name}
           className="img-fluid"
           style={{ 
             width: "40%", 
@@ -122,14 +125,14 @@ export const Character = () => {
             paddingBottom: "0.5rem",
             color: "rgb(158, 79, 96)"
           }}>
-            {name}
+            {planetData.properties.name}
           </h2>
           <p className="card-text mt-3" style={{ 
             fontSize: "1rem", 
             lineHeight: "1.6",
             color: "#ddd"
           }}>
-            {description || 'No description available'}
+            {description || 'No planetary description available'}
           </p>
         </div>
       </div>
@@ -146,36 +149,36 @@ export const Character = () => {
         backgroundColor: "#1a1a1a"
       }}>
         <div className="m-2">
-          <strong>Name</strong><br />
-          <span style={{ color: "#ddd" }}>{name}</span>
+          <strong>Climate</strong><br />
+          <span style={{ color: "#ddd" }}>{climate}</span>
         </div>
         <div className="m-2">
-          <strong>Birth Year</strong><br />
-          <span style={{ color: "#ddd" }}>{birth_year}</span>
+          <strong>Diameter</strong><br />
+          <span style={{ color: "#ddd" }}>{diameter} km</span>
         </div>
         <div className="m-2">
-          <strong>Gender</strong><br />
-          <span style={{ color: "#ddd" }}>{gender}</span>
+          <strong>Gravity</strong><br />
+          <span style={{ color: "#ddd" }}>{gravity}</span>
         </div>
         <div className="m-2">
-          <strong>Height</strong><br />
-          <span style={{ color: "#ddd" }}>{height} cm</span>
+          <strong>Orbital Period</strong><br />
+          <span style={{ color: "#ddd" }}>{orbital_period} days</span>
         </div>
         <div className="m-2">
-          <strong>Mass</strong><br />
-          <span style={{ color: "#ddd" }}>{mass} kg</span>
+          <strong>Population</strong><br />
+          <span style={{ color: "#ddd" }}>{population}</span>
         </div>
         <div className="m-2">
-          <strong>Hair Color</strong><br />
-          <span style={{ color: "#ddd" }}>{hair_color}</span>
+          <strong>Rotation Period</strong><br />
+          <span style={{ color: "#ddd" }}>{rotation_period} hours</span>
         </div>
         <div className="m-2">
-          <strong>Skin Color</strong><br />
-          <span style={{ color: "#ddd" }}>{skin_color}</span>
+          <strong>Surface Water</strong><br />
+          <span style={{ color: "#ddd" }}>{surface_water}%</span>
         </div>
         <div className="m-2">
-          <strong>Eye Color</strong><br />
-          <span style={{ color: "#ddd" }}>{eye_color}</span>
+          <strong>Terrain</strong><br />
+          <span style={{ color: "#ddd" }}>{terrain}</span>
         </div>
       </div>
     </div>

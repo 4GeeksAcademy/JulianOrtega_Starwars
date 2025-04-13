@@ -19,7 +19,7 @@ export const Sidebar = () => {
       }}
     >
       <ul className="nav nav-pills flex-column mb-auto">
-        {["Browse","All", "Characters", "Creatures", "Droids", "Locations", "Organizations", "Species", "Vehicles", "Weapons+Tech", "More"].map((item, index) => (
+        {["Browse","All", "Characters", "Creatures", "Droids", "planets", "Organizations", "Species", "Vehicles", "Weapons+Tech", "More"].map((item, index) => (
           <li 
             className="nav-item" 
             key={index}

@@ -3,38 +3,38 @@ import { useParams } from 'react-router-dom';
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { useState, useEffect } from "react";
 
-export const Character = () => {
+export const Vehicle = () => {
   const API_URL = import.meta.env.VITE_API_URL;
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [characterData, setCharacterData] = useState(null);
+  const [vehicleData, setVehicleData] = useState(null);
   
   const { id } = useParams();
   const { store } = useGlobalReducer();
 
-  const fetchCharacterData = async () => {
+  const fetchVehicleData = async () => {
     try {
       setIsLoading(true);
-      const cachedCharacter = store.characters.find(item => item.uid === id);
+      const cachedVehicle = store.vehicles.find(item => item.uid === id);
       
-      const response = await fetch(`${API_URL}people/${id}`, {
+      const response = await fetch(`${API_URL}vehicles/${id}`, {
         headers: { 'Accept': 'application/json' }
       });
       
-      if (!response.ok) throw new Error('Character not found');
+      if (!response.ok) throw new Error('Vehicle not found');
       
       const apiData = await response.json().then(data => data.result);
       
       const mergedData = {
-        ...cachedCharacter,
+        ...cachedVehicle,
         ...apiData,
         properties: {
-          ...cachedCharacter?.properties,
+          ...cachedVehicle?.properties,
           ...apiData.properties
         }
       };
       
-      setCharacterData(mergedData);
+      setVehicleData(mergedData);
       
     } catch (err) {
       setError(err.message);
@@ -44,13 +44,13 @@ export const Character = () => {
   };
 
   useEffect(() => {
-    fetchCharacterData();
+    fetchVehicleData();
   }, [id]);
 
   if (isLoading) {
     return (
       <div className="text-center py-5">
-        <p className="text-light mt-2">Loading character data...</p>
+        <p className="text-light mt-2">Loading vehicle data...</p>
       </div>
     );
   }
@@ -63,8 +63,8 @@ export const Character = () => {
     );
   }
 
-  if (!characterData) {
-    return <div className="text-light text-center mt-4">Character not found</div>;
+  if (!vehicleData) {
+    return <div className="text-light text-center mt-4">Vehicle not found</div>;
   }
 
   // Extraer datos
@@ -72,15 +72,18 @@ export const Character = () => {
     name,
     description,
     properties: {
-      height = 'N/A',
-      mass = 'N/A',
-      hair_color = 'N/A',
-      skin_color = 'N/A',
-      eye_color = 'N/A',
-      birth_year = 'N/A',
-      gender = 'N/A'
+      model = 'N/A',
+      vehicle_class = 'N/A',
+      manufacturer = 'N/A',
+      cost_in_credits = 'N/A',
+      length = 'N/A',
+      crew = 'N/A',
+      passengers = 'N/A',
+      cargo_capacity = 'N/A',
+      max_atmosphering_speed = 'N/A',
+      consumables = 'N/A'
     } = {}
-  } = characterData;
+  } = vehicleData;
 
   return (
     <div className="card text-white bg-dark mb-4" style={{ 
@@ -92,7 +95,7 @@ export const Character = () => {
     }}>
       <div style={{ display: "flex", flexDirection: "row" }}>
         <img 
-          src={characterData.image || "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"} 
+          src={vehicleData.imageUrl || "https://media.sproutsocial.com/uploads/2022/06/profile-picture.jpeg"} 
           alt={name}
           className="img-fluid"
           style={{ 
@@ -129,12 +132,12 @@ export const Character = () => {
             lineHeight: "1.6",
             color: "#ddd"
           }}>
-            {description || 'No description available'}
+            {description || 'No technical description available'}
           </p>
         </div>
       </div>
 
-      {/* Sección de datos */}
+      {/* Sección de datos técnicos */}
       <div style={{ 
         borderTop: "2px solid rgb(158, 79, 96)", 
         padding: "1.5rem 1rem", 
@@ -146,36 +149,44 @@ export const Character = () => {
         backgroundColor: "#1a1a1a"
       }}>
         <div className="m-2">
-          <strong>Name</strong><br />
-          <span style={{ color: "#ddd" }}>{name}</span>
+          <strong>Model</strong><br />
+          <span style={{ color: "#ddd" }}>{model}</span>
         </div>
         <div className="m-2">
-          <strong>Birth Year</strong><br />
-          <span style={{ color: "#ddd" }}>{birth_year}</span>
+          <strong>Class</strong><br />
+          <span style={{ color: "#ddd" }}>{vehicle_class}</span>
         </div>
         <div className="m-2">
-          <strong>Gender</strong><br />
-          <span style={{ color: "#ddd" }}>{gender}</span>
+          <strong>Manufacturer</strong><br />
+          <span style={{ color: "#ddd" }}>{manufacturer}</span>
         </div>
         <div className="m-2">
-          <strong>Height</strong><br />
-          <span style={{ color: "#ddd" }}>{height} cm</span>
+          <strong>Cost</strong><br />
+          <span style={{ color: "#ddd" }}>{cost_in_credits} credits</span>
         </div>
         <div className="m-2">
-          <strong>Mass</strong><br />
-          <span style={{ color: "#ddd" }}>{mass} kg</span>
+          <strong>Length</strong><br />
+          <span style={{ color: "#ddd" }}>{length}m</span>
         </div>
         <div className="m-2">
-          <strong>Hair Color</strong><br />
-          <span style={{ color: "#ddd" }}>{hair_color}</span>
+          <strong>Crew</strong><br />
+          <span style={{ color: "#ddd" }}>{crew}</span>
         </div>
         <div className="m-2">
-          <strong>Skin Color</strong><br />
-          <span style={{ color: "#ddd" }}>{skin_color}</span>
+          <strong>Passengers</strong><br />
+          <span style={{ color: "#ddd" }}>{passengers}</span>
         </div>
         <div className="m-2">
-          <strong>Eye Color</strong><br />
-          <span style={{ color: "#ddd" }}>{eye_color}</span>
+          <strong>Cargo Capacity</strong><br />
+          <span style={{ color: "#ddd" }}>{cargo_capacity}kg</span>
+        </div>
+        <div className="m-2">
+          <strong>Max Speed</strong><br />
+          <span style={{ color: "#ddd" }}>{max_atmosphering_speed} km/h</span>
+        </div>
+        <div className="m-2">
+          <strong>Consumables</strong><br />
+          <span style={{ color: "#ddd" }}>{consumables}</span>
         </div>
       </div>
     </div>

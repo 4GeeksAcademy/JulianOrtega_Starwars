@@ -7,19 +7,23 @@ export const Navbar = () => {
   const { store } = useGlobalReducer();
   const [likedCharactersUids, setLikedCharactersUids] = useState([]);
   const [likedVehiclesUids, setLikedVehiclesUids] = useState([]);
+  const [likedPlanetsUids, setLikedPlanetsUids] = useState([]);
   
   useEffect(() => {
     const loadLikedItems = () => {
       const savedCharacters = localStorage.getItem('likedCharacters');
       const savedVehicles = localStorage.getItem('likedVehicles');
+      const savedPlanets = localStorage.getItem('likedPlanets');
+      
       if (savedCharacters) setLikedCharactersUids(JSON.parse(savedCharacters));
       if (savedVehicles) setLikedVehiclesUids(JSON.parse(savedVehicles));
+      if (savedPlanets) setLikedPlanetsUids(JSON.parse(savedPlanets));
     };
     
     loadLikedItems();
 
     const handleStorageChange = (e) => {
-      if (e.key === 'likedCharacters' || e.key === 'likedVehicles') {
+      if (['likedCharacters', 'likedVehicles', 'likedPlanets'].includes(e.key)) {
         loadLikedItems();
       }
     };
@@ -33,28 +37,44 @@ export const Navbar = () => {
     };
   }, []);
 
-  const likedCharacters = store.characters.filter(character => 
+  const likedCharacters = store.characters?.filter(character => 
     likedCharactersUids.includes(character.uid)
-  );
+  ) || [];
 
-  const likedVehicles = store.vehicles.filter(vehicle => 
+  const likedVehicles = store.vehicles?.filter(vehicle => 
     likedVehiclesUids.includes(vehicle.uid)
-  );
+  ) || [];
+
+  const likedPlanets = store.planets?.filter(planet => 
+    likedPlanetsUids.includes(planet.uid)
+  ) || [];
 
   const combinedLiked = [
     ...likedCharacters.map(c => ({ ...c, type: 'character' })),
-    ...likedVehicles.map(v => ({ ...v, type: 'vehicle' }))
+    ...likedVehicles.map(v => ({ ...v, type: 'vehicle' })),
+    ...likedPlanets.map(p => ({ ...p, type: 'planet' }))
   ];
 
   const handleDelete = (uid, type) => {
-    if (type === 'character') {
-      const newLiked = likedCharactersUids.filter(id => id !== uid);
-      setLikedCharactersUids(newLiked);
-      localStorage.setItem('likedCharacters', JSON.stringify(newLiked));
-    } else {
-      const newLiked = likedVehiclesUids.filter(id => id !== uid);
-      setLikedVehiclesUids(newLiked);
-      localStorage.setItem('likedVehicles', JSON.stringify(newLiked));
+    let newLiked;
+    switch(type) {
+      case 'character':
+        newLiked = likedCharactersUids.filter(id => id !== uid);
+        setLikedCharactersUids(newLiked);
+        localStorage.setItem('likedCharacters', JSON.stringify(newLiked));
+        break;
+      case 'vehicle':
+        newLiked = likedVehiclesUids.filter(id => id !== uid);
+        setLikedVehiclesUids(newLiked);
+        localStorage.setItem('likedVehicles', JSON.stringify(newLiked));
+        break;
+      case 'planet':
+        newLiked = likedPlanetsUids.filter(id => id !== uid);
+        setLikedPlanetsUids(newLiked);
+        localStorage.setItem('likedPlanets', JSON.stringify(newLiked));
+        break;
+      default:
+        break;
     }
   };
   
