@@ -57,7 +57,6 @@ export const Navbar = () => {
       localStorage.setItem('likedVehicles', JSON.stringify(newLiked));
     }
   };
-  console.log(likedCharacters, likedVehicles);
   
   return (
     <div 
