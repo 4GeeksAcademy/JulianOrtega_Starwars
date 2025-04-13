@@ -16,7 +16,7 @@ export const Vehicles = () => {
   const observer = useRef();
 
   useEffect(() => {
-    const savedLikes = localStorage.getItem('likedCreatures');
+    const savedLikes = localStorage.getItem('likedVehicles');
     if (savedLikes) {
       setLikedUids(JSON.parse(savedLikes));
     }
@@ -28,7 +28,7 @@ export const Vehicles = () => {
         ? prev.filter(id => id !== uid) 
         : [...prev, uid];
       
-      localStorage.setItem('likedCreatures', JSON.stringify(newLiked));
+      localStorage.setItem('likedVehicles', JSON.stringify(newLiked));
       return newLiked;
     });
     
@@ -57,8 +57,8 @@ export const Vehicles = () => {
       console.log(data);
       
       dispatch({
-        type: 'creatures',
-        payload: page === 1 ? data.results : [...store.creatures, ...data.results]
+        type: 'vehicles',
+        payload: page === 1 ? data.results : [...store.vehicles, ...data.results]
       });
 
       setHasMore(data.results.length === 20);

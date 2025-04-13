@@ -5,50 +5,60 @@ import { useEffect, useState } from "react";
 
 export const Navbar = () => {
   const { store } = useGlobalReducer();
-  const [likedUids, setLikedUids] = useState([]);
+  const [likedCharactersUids, setLikedCharactersUids] = useState([]);
+  const [likedVehiclesUids, setLikedVehiclesUids] = useState([]);
   
-  // Cargar favoritos y configurar listeners
   useEffect(() => {
-    // Función para actualizar el estado desde localStorage
-    const loadLikedUids = () => {
-      const saved = localStorage.getItem('likedCharacters');
-      if (saved) setLikedUids(JSON.parse(saved));
+    const loadLikedItems = () => {
+      const savedCharacters = localStorage.getItem('likedCharacters');
+      const savedVehicles = localStorage.getItem('likedVehicles');
+      if (savedCharacters) setLikedCharactersUids(JSON.parse(savedCharacters));
+      if (savedVehicles) setLikedVehiclesUids(JSON.parse(savedVehicles));
     };
     
-    // Cargar datos iniciales
-    loadLikedUids();
+    loadLikedItems();
 
-    // Handler para cambios en el storage
     const handleStorageChange = (e) => {
-      if (e.key === 'likedCharacters') {
-        loadLikedUids();
+      if (e.key === 'likedCharacters' || e.key === 'likedVehicles') {
+        loadLikedItems();
       }
     };
 
-    // Escuchar eventos de storage (cambios desde otras pestañas)
     window.addEventListener('storage', handleStorageChange);
+    const interval = setInterval(loadLikedItems, 1000);
 
-    // Escuchar cambios locales cada segundo (solo para desarrollo)
-    const interval = setInterval(loadLikedUids, 1000);
-
-    // Limpieza
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
     };
   }, []);
 
-  // Obtener personajes favoritos actualizados
   const likedCharacters = store.characters.filter(character => 
-    likedUids.includes(character.uid)
+    likedCharactersUids.includes(character.uid)
   );
 
-  const handleDelete = (uid) => {
-    const newLiked = likedUids.filter(id => id !== uid);
-    setLikedUids(newLiked);
-    localStorage.setItem('likedCharacters', JSON.stringify(newLiked));
-  };
+  const likedVehicles = store.vehicles.filter(vehicle => 
+    likedVehiclesUids.includes(vehicle.uid)
+  );
 
+  const combinedLiked = [
+    ...likedCharacters.map(c => ({ ...c, type: 'character' })),
+    ...likedVehicles.map(v => ({ ...v, type: 'vehicle' }))
+  ];
+
+  const handleDelete = (uid, type) => {
+    if (type === 'character') {
+      const newLiked = likedCharactersUids.filter(id => id !== uid);
+      setLikedCharactersUids(newLiked);
+      localStorage.setItem('likedCharacters', JSON.stringify(newLiked));
+    } else {
+      const newLiked = likedVehiclesUids.filter(id => id !== uid);
+      setLikedVehiclesUids(newLiked);
+      localStorage.setItem('likedVehicles', JSON.stringify(newLiked));
+    }
+  };
+  console.log(likedCharacters, likedVehicles);
+  
   return (
     <div 
       className="bg-dark text-white border-secondary d-flex justify-content-between align-items-center px-4"
@@ -72,29 +82,29 @@ export const Navbar = () => {
           data-bs-toggle="dropdown" 
           aria-expanded="false"
         >
-          Favorites <span className="badge bg-secondary">{likedCharacters.length}</span>
+          Favorites <span className="badge bg-secondary">{combinedLiked.length}</span>
         </button>
         <ul className="dropdown-menu dropdown-menu-end bg-dark text-white p-2" style={{ minWidth: "200px" }}>
-          {likedCharacters.length === 0 ? (
+          {combinedLiked.length === 0 ? (
             <li className="text-center text-muted small">No favorites yet</li>
           ) : (
             <>
-              {likedCharacters.map(character => (
+              {combinedLiked.map(item => (
                 <li 
-                  key={character.uid}
+                  key={`${item.type}-${item.uid}`}
                   className="d-flex justify-content-between align-items-center py-1"
                 >
-                  <span>{character.name}</span>
+                  <span>{item.name}</span>
                   <FaTrash 
                     className="text-danger" 
                     role="button" 
-                    onClick={() => handleDelete(character.uid)}
+                    onClick={() => handleDelete(item.uid, item.type)}
                   />
                 </li>
               ))}
               <li><hr className="dropdown-divider bg-secondary" /></li>
               <li className="text-center text-muted small">
-                Total: {likedCharacters.length} items
+                Total: {combinedLiked.length} items
               </li>
             </>
           )}
