@@ -4,7 +4,7 @@ export const initialStore=()=>{
     todos: [],
     characters: [],
     vehicles: [],
-    planets: []
+    planets: [],
   }
 }
 

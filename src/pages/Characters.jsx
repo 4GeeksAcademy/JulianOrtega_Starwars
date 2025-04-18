@@ -33,7 +33,7 @@ export const Characters = () => {
     });
     
     setIsClicked(true);
-    setTimeout(() => setIsClicked(false), 300);
+    setTimeout(() => setIsClicked(false), 3000);
   }, []);
 
   const lastItemRef = useCallback(node => {
