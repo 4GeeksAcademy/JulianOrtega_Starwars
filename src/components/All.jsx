@@ -64,11 +64,14 @@ export const All = () => {
   // Manejar likes
   const handleLike = useCallback((uid, type) => {
     setLikedItems(prev => {
+      console.log(prev, type);
+      
       const newLiked = prev[type].includes(uid)
         ? prev[type].filter(id => id !== uid)
         : [...prev[type], uid];
       
-      localStorage.setItem(`liked${type}`, JSON.stringify(newLiked));
+        const capitalizedType = type.charAt(0).toUpperCase() + type.slice(1);
+      localStorage.setItem(`liked${capitalizedType}`, JSON.stringify(newLiked));
       return { ...prev, [type]: newLiked };
     });
     
